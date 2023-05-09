@@ -43,7 +43,7 @@ UserSchemas.pre("save", async function (next) {
 
 // creating a token for sign
 UserSchemas.methods.getJWTToken = function () {
-  return jsonwebtoken.sign({ id: this._id }, process.env.JWT_TOken, {
+  return jsonwebtoken.sign({ id: this._id }, process.env.JWT_TOKEN, {
     expiresIn: process.env.JWT_EXPIRE,
   });
 };
