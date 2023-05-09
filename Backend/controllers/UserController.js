@@ -3,6 +3,7 @@ import { User } from "../models/Usermodel.js";
 import ErrorHanddler from "../utils/ErrorHanddler.js";
 import { SendToken } from "../utils/JWTToken.js";
 
+// Register Usser
 export const Register = CatchAsyncError(async (reqs, resp, next) => {
   const { name, email, password } = reqs.body;
 
@@ -14,7 +15,7 @@ export const Register = CatchAsyncError(async (reqs, resp, next) => {
 
   if (user) {
     return next(
-      new ErrorHanddler("User is Already Exist Please Login in !", 400)
+      new ErrorHanddler("User is Already Exist Please Login ", 400)
     );
   }
 
@@ -26,6 +27,25 @@ export const Register = CatchAsyncError(async (reqs, resp, next) => {
   SendToken(user, 200, resp);
 });
 
+// get user
+
+export const loadUser = CatchAsyncError(async (reqs, resp, next) => {
+
+  console.log(reqs.user);
+
+  const user = await User.findById(reqs.user.id);
+  const { email, name, varified } = user;
+
+  resp.status(200).json({
+    sucess: true,
+    userData: {
+      email, name, varified
+    }
+  })
+})
+
+
+// Login user
 export const login = CatchAsyncError(async (reqs, resp, next) => {
   const { email, password } = reqs.body;
 
@@ -51,7 +71,6 @@ export const login = CatchAsyncError(async (reqs, resp, next) => {
 });
 
 //Logoout
-
 export const logout = CatchAsyncError(async (reqs, resp, next) => {
   resp.cookie("token", null, {
     expires: new Date(Date.now()),

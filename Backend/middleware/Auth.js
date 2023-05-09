@@ -14,9 +14,7 @@ export const isAuthenticatedUser = CatchAsyncError(
       );
     }
     const verifyToken = await jsonwebtoken.verify(token, process.env.JWT_TOKEN);
-
     reqs.user = await User.findById(verifyToken.id);
-
     next();
   }
 );
