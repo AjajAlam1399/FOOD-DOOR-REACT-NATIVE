@@ -1,0 +1,24 @@
+{
+  "name": "food-delivery",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Backend/Server.js",
+  "engines": {
+    "node": ">=14 <15"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node Backend/Server.js",
+    "dev": "nodemon Backend/Server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AjajAlam1399/FOOD-DOOR-REACT-NATIVE.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AjajAlam1399/FOOD-DOOR-REACT-NATIVE/issues"
+  },
+  "homepage": "https://github.com/AjajAlam1399/FOOD-DOOR-REACT-NATIVE#readme"
+}
