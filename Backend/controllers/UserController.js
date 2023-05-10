@@ -31,15 +31,15 @@ export const Register = CatchAsyncError(async (reqs, resp, next) => {
 
 export const loadUser = CatchAsyncError(async (reqs, resp, next) => {
 
-  // console.log(reqs.user);
 
-  // const user = await User.findById(reqs.user?.id);
-  // const { email, name, varified } = user;
-  const token=reqs.cookies?reqs.cookies.token:"";
+  const user = await User.findById(reqs.user.id);
+  const { email, name, varified } = user;
 
   resp.status(200).json({
     sucess: true,
-    token
+    userData: {
+      email, name, varified
+    }
   })
 })
 
