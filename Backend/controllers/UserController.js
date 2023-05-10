@@ -30,8 +30,7 @@ export const Register = CatchAsyncError(async (reqs, resp, next) => {
 // get user
 
 export const loadUser = CatchAsyncError(async (reqs, resp, next) => {
-
-
+  
   const user = await User.findById(reqs.user.id);
   const { email, name, varified } = user;
 
