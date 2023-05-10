@@ -31,16 +31,15 @@ export const Register = CatchAsyncError(async (reqs, resp, next) => {
 
 export const loadUser = CatchAsyncError(async (reqs, resp, next) => {
 
-  console.log(reqs.user);
+  // console.log(reqs.user);
 
-  const user = await User.findById(reqs.user.id);
-  const { email, name, varified } = user;
+  // const user = await User.findById(reqs.user?.id);
+  // const { email, name, varified } = user;
+  const token=reqs.cookies?reqs.cookies.token:"";
 
   resp.status(200).json({
     sucess: true,
-    userData: {
-      email, name, varified
-    }
+    token
   })
 })
 
@@ -82,3 +81,18 @@ export const logout = CatchAsyncError(async (reqs, resp, next) => {
     message: "You Have been Sucessfully Logout",
   });
 });
+
+// forgetPassword
+
+export const forgetPassword = CatchAsyncError(
+  async (reqs, resp, next) => {
+    const { email } = reqs.body;
+    if (!email) {
+      return next(new ErrorHanddler("Please Fill the Email field", 400));
+    }
+    const user = await User.findOne({ email });
+    if (!user) {
+      return next(new ErrorHanddler(`${email} is not registered. Please register`, 401));
+    }
+  }
+)

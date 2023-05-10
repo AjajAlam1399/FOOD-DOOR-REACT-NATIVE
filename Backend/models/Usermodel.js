@@ -44,14 +44,15 @@ UserSchemas.pre("save", async function (next) {
 // creating a token for sign
 UserSchemas.methods.getJWTToken = function () {
   return jsonwebtoken.sign({ id: this._id }, process.env.JWT_TOKEN, {
-    expiresIn:process.env.JWT_EXPIRE,
+    expiresIn: process.env.JWT_EXPIRE,
   });
 };
 
 
 //compare Password
 UserSchemas.methods.comparePassword = async function (inputPassword) {
-  return await bcryptjs.compare(inputPassword,this.password);
+  return await bcryptjs.compare(inputPassword, this.password);
 };
+
 
 export const User = new mongoose.model("Users", UserSchemas);
