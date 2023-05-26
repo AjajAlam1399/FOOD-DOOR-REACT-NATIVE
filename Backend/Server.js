@@ -1,5 +1,6 @@
 import { config } from "dotenv";
 import App from "./App.js";
+import cloudinary from 'cloudinary';
 
 import { connectDataBase } from "./config/database.js";
 
@@ -15,6 +16,13 @@ config({ path: "Backend/config/config.env" });
 
 //database config
 connectDataBase();
+
+// cloudinary config
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+})
 
 const server = App.listen(process.env.PORT, (error) => {
   if (error) {
