@@ -22,7 +22,7 @@ const resturantSchemas = new Schema({
         type: String,
         required: [true, "Please Enter the Resturent Location"],
     },
-    logo:{
+    logo: {
         public_id: {
             type: String,
             required: true,
@@ -32,7 +32,7 @@ const resturantSchemas = new Schema({
             required: true,
         },
     },
-    poster:{
+    poster: {
         public_id: {
             type: String,
             required: true,
@@ -42,7 +42,14 @@ const resturantSchemas = new Schema({
             required: true,
         },
     },
-    cover:{
+    rating: {
+        type: Number,
+        required: [true, "Please Enter the Resturant Rating"]
+    },
+    noReviews: {
+        type: Number,
+    },
+    cover: {
         public_id: {
             type: String,
             required: true,
@@ -52,13 +59,27 @@ const resturantSchemas = new Schema({
             required: true,
         },
     },
-    catogeries:[
+    items: [
         {
-            type:String,
-            required:[true,"Please Enter the Resturent Catogeries"]
+            name: String,
+            price: Number,
+            public_id: String,
+            url: String,
+            description: String,
+            ingredients: String,
+            category: String
         }
-    ]
+    ],
+    catogeries: [
+        {
+            type: String,
+            required: [true, "Please Enter the Resturent Catogeries"]
+        }
+    ],
+    distance: {
+        type: String
+    }
 });
 
-export const Resturant=new model("Resturants",resturantSchemas);
+export const Resturant = new model("Resturants", resturantSchemas);
 
