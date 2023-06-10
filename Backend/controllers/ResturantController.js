@@ -4,7 +4,7 @@ import ErrorHanddler from "../utils/ErrorHanddler.js";
 import fs from 'fs'
 import cloudinary from 'cloudinary'
 
-import {Food} from '../models/Food.js'
+import { Food } from '../models/Food.js'
 
 export const newResturant = CatchAsyncError(
     async (reqs, resp, next) => {
@@ -83,9 +83,8 @@ export const getAllResturant = CatchAsyncError(
 
 export const foodItems = CatchAsyncError(
     async (reqs, resp, next) => {
-        const _id = reqs.params.id;
 
-        const { name, price, description, ingredients, category,resturant_id } = reqs.body;
+        const { name, price, description, ingredients, category, resturant_id } = reqs.body;
 
         let image = reqs.files.image.tempFilePath;
 
@@ -96,7 +95,7 @@ export const foodItems = CatchAsyncError(
         // removing file
         fs.rmSync("tmp", { recursive: true });
 
-        const food=await Food.create({
+        const food = await Food.create({
             name,
             price,
             public_id: mycloud1.public_id,
@@ -124,7 +123,7 @@ export const getResturantById = CatchAsyncError(
             },
             {
                 '$lookup': {
-                    'from': 'Food',
+                    'from': 'foods',
                     'localField': 'id',
                     'foreignField': 'resturant_id',
                     'as': 'foods'

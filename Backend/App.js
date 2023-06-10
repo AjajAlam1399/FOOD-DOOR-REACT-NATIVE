@@ -2,6 +2,7 @@ import express, { urlencoded } from "express";
 import cors from "cors";
 import router from "./routes/UserRouter.js";
 import resturantRrouter from "./routes/ResturantRoute.js";
+import cartRouter from "./routes/CartRoute.js";
 import ErrorMiddleware from "./middleware/ErrorMiddleware.js";
 import cookieParser from "cookie-parser";
 import fileupload from 'express-fileupload'
@@ -24,6 +25,7 @@ App.use(cors());
 // uder Router
 App.use("/api/v1", router);
 App.use('/api/v1',resturantRrouter);
+App.use('/api/v1',cartRouter);
 
 // error handller middlewrae
 App.use(ErrorMiddleware);

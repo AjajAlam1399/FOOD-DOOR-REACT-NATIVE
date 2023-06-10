@@ -11,4 +11,4 @@ const foodSchemas = new Schema({
     category: String
 });
 
-export const Food=new model("Food",foodSchemas);
+export const Food=new model("foods",foodSchemas);
