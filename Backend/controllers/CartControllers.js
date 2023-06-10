@@ -10,10 +10,14 @@ export const addToCart = CatchAsyncError(
             { foodId, email }, { $inc: { count: 1 } },
             { upsert: true }
         )
+        let response={};
+        if(cart?.acknowledged){
+             response=await Cart.find({ email }).populate('foodId');
+        }
 
         resp.status(200).json({
             sucess: true,
-            cart
+            response
         })
     }
 )
@@ -28,10 +32,13 @@ export const removeFromCart = CatchAsyncError(
             { foodId, email }, { $inc: { count: -1 } },
             { upsert: true }
         )
-
+        let response={};
+        if(cart?.acknowledged){
+             response=await Cart.find({ email }).populate('foodId');
+        }
         resp.status(200).json({
             sucess: true,
-            cart
+            response
         })
     }
 )
