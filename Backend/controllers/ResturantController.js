@@ -138,3 +138,19 @@ export const getResturantById = CatchAsyncError(
         })
     }
 )
+
+// get food by id
+
+export const getFoodById = CatchAsyncError(
+    async (reqs, resp, next) => {
+
+        const { id } = reqs.params;
+        console.log(id);
+        const food = await Food.findById(id);
+
+        resp.status(200).json({
+            sucess: true,
+            food
+        })
+    }
+)
