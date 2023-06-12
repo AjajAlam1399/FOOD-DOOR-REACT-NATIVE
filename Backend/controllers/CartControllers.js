@@ -6,18 +6,28 @@ import CatchAsyncError from "../middleware/CatchAsyncError.js";
 export const addToCart = CatchAsyncError(
     async (reqs, resp, next) => {
         const { foodId, email } = reqs.body;
-        const cart = await Cart.updateOne(
+        let cart = await Cart.updateOne(
             { foodId, email }, { $inc: { count: 1 } },
             { upsert: true }
         )
-        let response={};
-        if(cart?.acknowledged){
-             response=await Cart.find({ email }).populate('foodId');
+        let itemsTotal = 0;
+        let discount = 0;
+        if (cart?.acknowledged) {
+            cart = await Cart.find({ email }).populate('foodId');
+            itemsTotal = cart?.map(item => item?.foodId?.price * item?.count).reduce((a, b) => parseFloat(a) + parseFloat(b));
         }
 
         resp.status(200).json({
             sucess: true,
-            response
+            data: {
+                cart,
+                metaData: {
+                    itemsTotal,
+                    discount,
+                    grandTotal: itemsTotal - discount
+
+                }
+            }
         })
     }
 )
@@ -28,17 +38,28 @@ export const removeFromCart = CatchAsyncError(
 
     async (reqs, resp, next) => {
         const { foodId, email } = reqs.body;
-        const cart = await Cart.updateOne(
+        let cart = await Cart.updateOne(
             { foodId, email }, { $inc: { count: -1 } },
             { upsert: true }
         )
-        let response={};
-        if(cart?.acknowledged){
-             response=await Cart.find({ email }).populate('foodId');
+        let itemsTotal = 0;
+        let discount = 0;
+        if (cart?.acknowledged) {
+            cart = await Cart.find({ email }).populate('foodId');
+            itemsTotal = cart?.map(item => item?.foodId?.price * item?.count).reduce((a, b) => parseFloat(a) + parseFloat(b));
+
         }
         resp.status(200).json({
             sucess: true,
-            response
+            data: {
+                cart,
+                metaData: {
+                    itemsTotal,
+                    discount,
+                    grandTotal: itemsTotal - discount
+
+                }
+            }
         })
     }
 )
