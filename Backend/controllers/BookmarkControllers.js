@@ -8,7 +8,19 @@ export const CreateBookMark = CatchAsyncError(
         const { email, resturantId } = reqs.body;
         let data = await BookMark.create({ email, resturantId })
         if (data) {
-            data = await BookMark.find({ email }).populate('resturantId');
+            data = await BookMark.aggregate([
+                {
+                    $match: { email }
+                },
+                {
+                    '$lookup': {
+                        'from': 'resturants',
+                        'localField': 'resturantId',
+                        'foreignField': 'id',
+                        'as': 'resturant'
+                    }
+                }
+            ])
         }
 
         resp.status(200).json({
@@ -23,7 +35,19 @@ export const deleteBookMark = CatchAsyncError(
         const { email, resturantId } = reqs.body;
         let data = await BookMark.deleteOne({ email, resturantId })
         if (data) {
-            data = await BookMark.find({ email }).populate('resturantId');
+            data = await BookMark.aggregate([
+                {
+                    $match: { email }
+                },
+                {
+                    '$lookup': {
+                        'from': 'resturants',
+                        'localField': 'resturantId',
+                        'foreignField': 'id',
+                        'as': 'resturant'
+                    }
+                }
+            ])
         }
 
         resp.status(200).json({
@@ -36,7 +60,19 @@ export const deleteBookMark = CatchAsyncError(
 export const getBookMark = CatchAsyncError(
     async (reqs, resp, next) => {
         const { email } = reqs.body;
-        const data = await BookMark.find({ email }).populate('resturantId');
+        const data = await BookMark.aggregate([
+            {
+                $match: { email }
+            },
+            {
+                '$lookup': {
+                    'from': 'resturants',
+                    'localField': 'resturantId',
+                    'foreignField': 'id',
+                    'as': 'resturant'
+                }
+            }
+        ])
 
         resp.status(200).json({
             sucess: true,
