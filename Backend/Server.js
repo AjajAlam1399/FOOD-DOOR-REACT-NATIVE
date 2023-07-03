@@ -11,6 +11,7 @@ process.on("uncaughtException", (err) => {
   process.exit(1);
 });
 
+
 // dotenv config
 config({ path: "Backend/config/config.env" });
 
@@ -23,6 +24,8 @@ cloudinary.config({
   api_key: process.env.API_KEY,
   api_secret: process.env.CLOUD_API_SECRET,
 })
+
+
 
 const server = App.listen(process.env.PORT, (error) => {
   if (error) {

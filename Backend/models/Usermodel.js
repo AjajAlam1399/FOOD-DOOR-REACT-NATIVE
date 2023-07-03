@@ -7,8 +7,6 @@ const UserSchemas = new mongoose.Schema({
     type: String,
     required: [true, "Enter Name Please !"],
     trim: true,
-    maxlength: [30, "Name Should not more than 30 chracters"],
-    minlength: [4, "Name Should Contain atleast 4 chracters"],
   },
   email: {
     type: String,
@@ -20,17 +18,22 @@ const UserSchemas = new mongoose.Schema({
     type: String,
     required: [true, "Enter Password Please !"],
     select: false,
-    minlength: [8, "Password Should Have Atleast 8 Chracters"],
-    maxlength: [20, "Password Should Not Have More Than 20 Chracters"],
   },
   createAt: {
     type: Date,
     default: new Date(Date.now()),
   },
+  otp: {
+    type: Number,
+    required: true
+  },
   varified: {
     type: Boolean,
     default: false,
   },
+  otpExpire: Date,
+  resetPasswordOtp: Number,
+  resetPasswordOtpExpire: Date
 });
 
 // encryption password
