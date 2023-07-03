@@ -2,7 +2,7 @@ import CatchAsyncError from "../middleware/CatchAsyncError.js";
 import { User } from "../models/Usermodel.js";
 import ErrorHanddler from "../utils/ErrorHanddler.js";
 import { SendToken } from "../utils/JWTToken.js";
-import { sendRegirsterMail } from "../utils/SendMail.js";
+import {sendRegirsterMail} from '../utils/SendMail.js'
 
 // Register Usser
 export const Register = CatchAsyncError(async (reqs, resp, next) => {
