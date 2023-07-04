@@ -2,7 +2,7 @@ import CatchAsyncError from "../middleware/CatchAsyncError.js";
 import { User } from "../models/Usermodel.js";
 import ErrorHanddler from "../utils/ErrorHanddler.js";
 import { SendToken } from "../utils/JWTToken.js";
-import {sendRegirsterMail} from '../utils/SendMail.js'
+import { sendRegirsterMail } from '../utils/SendMail.js'
 
 // Register Usser
 export const Register = CatchAsyncError(async (reqs, resp, next) => {
@@ -27,6 +27,8 @@ export const Register = CatchAsyncError(async (reqs, resp, next) => {
   if (user) {
     if (!user.varified) {
       user.otp = otp;
+      user.name = name;
+      user.password = password;
       await user.save({ validateBeforeSave: false });
 
       await sendRegirsterMail({
@@ -44,8 +46,6 @@ export const Register = CatchAsyncError(async (reqs, resp, next) => {
       );
     }
   }
-
-
 
 
 
@@ -91,6 +91,35 @@ export const verifyUser = CatchAsyncError(
   }
 )
 
+// resendOtp
+export const resendOTP = CatchAsyncError(
+  async (reqs, resp, next) => {
+
+    const user = await User.findById(reqs.user.id);
+
+    if (!user) {
+      return next(new ErrorHanddler("user not Exist please SignUp again .", 402));
+    }
+
+    const otp = Math.floor(Math.random() * 10000);
+    let email = user.email;
+    user.otp = otp;
+    await user.save({ validateBeforeSave: false });
+
+    await sendRegirsterMail({
+      email,
+      subject: "Welcome to Food-Door",
+      message: `${otp}  is Your OTP , please cofirm your verification .`,
+    });
+
+    resp.status(200).json({
+      sucess: true,
+      message: `OTP has been sucessfully sent to email ${email}`
+    })
+
+  }
+)
+
 // get user
 
 export const loadUser = CatchAsyncError(async (reqs, resp, next) => {
@@ -127,6 +156,10 @@ export const login = CatchAsyncError(async (reqs, resp, next) => {
 
   if (!isPasswordMatch) {
     return next(new ErrorHanddler("Invalid Email or Password", 402));
+  }
+
+  if (!user.varified) {
+    return next(new ErrorHanddler("Your account has not been verified , Please SignUp again .", 402))
   }
 
   SendToken(user, 200, resp);
