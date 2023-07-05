@@ -29,6 +29,7 @@ export const Register = CatchAsyncError(async (reqs, resp, next) => {
       user.otp = otp;
       user.name = name;
       user.password = password;
+      user.otpExpire = new Date(Date.now() + process.env.OTP_EXPIRE * 60 * 1000)
       await user.save({ validateBeforeSave: false });
 
       await sendRegirsterMail({
@@ -190,5 +191,56 @@ export const forgetPassword = CatchAsyncError(
     if (!user) {
       return next(new ErrorHanddler(`${email} is not registered. Please register`, 401));
     }
+
+    const otp = Math.ceil(Math.random() * 100000);
+    user.resetPasswordOtp = otp;
+    user.resetPasswordOtpExpire = new Date(Date.now() + process.env.OTP_EXPIRE * 60 * 1000)
+
+    await user.save({ validateBeforeSave: false });
+
+    await sendRegirsterMail({
+      email,
+      subject: "Reset Password Food-Door",
+      message: `${otp}  is Your OTP , please cofirm your verification for password change .`,
+    });
+
+    resp.status(200).json({
+      sucess: true,
+      message: `Reset Password OTP has been sucessfully sent on email ${email}`
+    })
+  }
+)
+
+export const resetPassword = CatchAsyncError(
+  async (reqs, resp, next) => {
+    const { otp, newPassword, confirmPassword, email } = reqs.body;
+    if (!otp || !newPassword || !confirmPassword || !email) {
+      return next(new ErrorHanddler("Please Enter all the field", 400));
+    }
+
+    const user = await User.findOne({ email});
+
+    if (otp !== user.resetPasswordOtp || user.resetPasswordOtpExpire< Date.now()) {
+      return next(new ErrorHanddler("opt is Invalid or expire", 401));
+    }
+
+    if(confirmPassword!==newPassword){
+      return next(new ErrorHanddler("new password and confirm password doesnot match", 401));
+    }
+
+    if(newPassword.length<4 || newPassword.length>20){
+      return next(new ErrorHanddler("password length should between 4-20 characters", 401));
+    }
+    
+    user.resetPasswordOtp = null;
+    user.resetPasswordOtpExpire = null;
+    user.password=newPassword;
+    await user.save({ validateBeforeSave: false });
+
+    resp.status(200).json({
+      sucess:true,
+      message:'Password has been sucessfully changed'
+    })
+
   }
 )
