@@ -7,6 +7,7 @@ import { sendRegirsterMail } from '../utils/SendMail.js'
 // Register Usser
 export const Register = CatchAsyncError(async (reqs, resp, next) => {
   const { name, email, password } = reqs.body;
+  const otp = Math.floor(Math.random() * 10000);
 
   if (!name || !email || !password) {
     return next(new ErrorHanddler("Plase Enter All the detail", 400));
@@ -22,7 +23,7 @@ export const Register = CatchAsyncError(async (reqs, resp, next) => {
 
   let user = await User.findOne({ email });
 
-  const otp = Math.floor(Math.random() * 10000);
+  
 
   if (user) {
     if (!user.varified) {
@@ -95,14 +96,14 @@ export const verifyUser = CatchAsyncError(
 // resendOtp
 export const resendOTP = CatchAsyncError(
   async (reqs, resp, next) => {
-
+    const otp = Math.floor(Math.random() * 10000);
     const user = await User.findById(reqs.user.id);
 
     if (!user) {
       return next(new ErrorHanddler("user not Exist please SignUp again .", 402));
     }
 
-    const otp = Math.floor(Math.random() * 10000);
+    
     let email = user.email;
     user.otp = otp;
     await user.save({ validateBeforeSave: false });
@@ -183,6 +184,7 @@ export const logout = CatchAsyncError(async (reqs, resp, next) => {
 
 export const forgetPassword = CatchAsyncError(
   async (reqs, resp, next) => {
+    const otp = Math.ceil(Math.random() * 1000000);
     const { email } = reqs.body;
     if (!email) {
       return next(new ErrorHanddler("Please Fill the Email field", 400));
@@ -192,7 +194,7 @@ export const forgetPassword = CatchAsyncError(
       return next(new ErrorHanddler(`${email} is not registered. Please register`, 401));
     }
 
-    const otp = Math.ceil(Math.random() * 100000);
+    
     user.resetPasswordOtp = otp;
     user.resetPasswordOtpExpire = new Date(Date.now() + process.env.OTP_EXPIRE * 60 * 1000)
 
